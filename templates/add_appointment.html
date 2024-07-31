@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% block title %}Add Appointment {% endblock title %}
+{% block appointment %} active {% endblock appointment %}
+{% block body %}
+<!-- Appointment Start -->
+<div class="container-fluid bg-success my-2 py-2">
+    <div class="container py-5">
+        <div class="row gx-5">
+            <div class="col-lg-6 mb-5 mb-lg-0">
+                <div class="mb-4">
+                    <h5 class="d-inline-block text-dark text-uppercase border-bottom border-5">Appointment</h5>
+                    <h1 class="display-4">Make An Appointment For Your Family</h1>
+                </div>
+               
+                
+            </div>
+                <div class="bg-white text-center rounded p-5">
+                    <h1 class="mb-4 text-dark">Book An Appointment</h1>
+                    <form action="/add_appointment/" method="POST">
+                        {% csrf_token %}
+                        <div class="row g-3">
+                           
+                            <div class="col-12  text-start">
+                                <label for="doctor_name" class="text-dark font-weight-bolder">Select the Doctor: </label>
+                                <select class="form-select bg-light border-0" style="height: 55px;" name="doctor-data" id="doctor_name" required>
+                                    <option disabled="true" selected>Select the Doctor</option>
+                                        {% for doctor in doctors %}
+                                    <option value='{{ doctor.id }}'>DR.{{ doctor.first_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <div class="col-12  text-start">
+                                <div class="date" id="date" data-target-input="nearest">
+                                    <label for="appointment_date" class="text-dark font-weight-bolder">Appointment Date : </label>
+                                    <input type="date" name="date" title="date eg: 01/01/2002" id="appointment_date"
+                                        class="form-control bg-light border-0 " placeholder="Date" data-target="#date" style="height: 55px;" required>
+                                </div>
+                            </div>
+                            <div class="col-12  text-start">
+                                <div class="time" id="time" data-target-input="nearest">
+                                    <label for="appointment_time" class="text-dark font-weight-bolder"> Appointment Time : </label>
+                                        <select class="form-control" id="time-slot" name="time" style="height: 55px;" required>
+                                            <option disabled="true" selected>Select the time slot</option>
+											<option>10AM-11AM</option>
+											<option>11AM-12pm</option>
+											<option>12PM-01PM</option>
+											<option>2PM-3PM</option>
+											<option>3PM-4PM</option>
+											<option>4PM-5PM</option>    
+											<option>6PM-7PM</option>
+											<option>7PM-8PM</option>
+											<option>8PM-9PM</option>
+										</select>
+                                </div>
+                            </div>
+                            <div class="col-12  text-start">
+                                <label for="reson" class="text-dark font-weight-bolder">Reason for Appointment:</label>
+                                <textarea class="form-control bg-light border-0 datetimepicker-input" id="reson" name="reason" 
+                                placeholder="Reason for visit" data-target="#message" data-toggle="message" style="height: 155px;" required></textarea>
+                              </div>
+                            <div class="col-12">
+                                <button class="btn btn-dark w-100 py-3" type="submit">Make An Appointment</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+        
+        </div>
+    </div>
+</div>
+<!-- Appointment End -->
+
+<script>
+    // Get the current date
+    var today = new Date();
+    
+    // Get tomorrow's date
+    var tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    
+    // Format tomorrow's date as "yyyy-mm-dd"
+    var formattedDate = tomorrow.toISOString().split('T')[0];
+    
+    // Set the min attribute of the date input field to tomorrow's date
+    document.getElementById("appointment_date").min = formattedDate;
+</script>
+
+{% endblock %}

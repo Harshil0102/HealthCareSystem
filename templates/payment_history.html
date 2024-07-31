@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %} ALL Appointment{% endblock title %}
+{% block payment_history %} active {% endblock payment_history %}
+{% block body %}
+
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Widget Item -->
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Payment History</h3>
+                <div class="table-responsive">
+
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr>
+                                {% comment %} <th><strong>Patient ID</strong></th> {% endcomment %}
+                                <th><strong>Payment ID</strong></th>
+                                <th><strong>Created at</strong></th>
+                                <th><strong>Actions</strong></th>
+                            </tr>
+                            {% for Payment in Payment %}
+                            <tr>
+                                <td>{{ Payment.id }}</td>
+                                <td>{{ Payment.created_at }}</td>
+                                
+                                <td>
+                                    <a href="/about_payment/{{Payment.id}}" class="btn btn-success btn-sm"><span class="fa fa-eye">Get Bill</span></a>
+                                    
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        
+                        </tbody>
+                    </table>
+                    
+                   
+                    
+                    
+                    
+                    
+                   
+                    
+                </div>
+            </div>
+        </div>
+        <!-- /Widget Item -->
+    </div>
+</div>
+<!-- /Main Content -->
+
+
+
+{% endblock %}

@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% block title %}Add Payment{% endblock title %}
+{% block payment %} active {% endblock payment %}
+{% block payment1 %} {% endblock payment1 %}
+{% block body %}
+
+<!-- Main Content -->
+<div class="container py-5">
+
+    <div class="row">
+        <!-- Widget Item -->
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Add Payment</h3>
+                <form action="/add_payment/{{id}}" method="POST" >
+                    {% csrf_token %}
+                    <div class="form-row">
+                        <div class="form-group col-md-12">
+                            <h4>Services</h4>										
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="service-name">Service Name</label>
+                            {% comment %} <input type="text" placeholder="Service Name" name="service_name" class="form-control" id="service-name"> {% endcomment %}
+                            <select class="form-control" id="service-name" name="service_name" data-default-text="Select the service" data-default-cost="0">
+                                <option value="" disabled="true" selected>Select the Service</option>
+                                {% for service in Service %}
+                                <option value='{{ service.id }}' data-cost='{{ service.service_cost }}'>{{ service.service_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>	
+                        
+                        <div class="form-group col-md-6">
+                            <label for="service-cost">Cost of Treatment</label>
+                            <input class="form-control" type='text' id="service-cost" value="0" data-default="0"  name="service_cost" disabled readonly>
+                                
+                        </div>
+                        
+                        
+                        <div class="form-group col-md-12">
+                        <button type="button" class="btn btn-outline-success" onclick="addService()"><span class="fa fa-plus"></span> Add Service</button>
+                        </div>
+                        <table id="services-table" class="table">
+                            <thead>
+                              <tr>
+                                <th>Service</th>
+                                <th>Cost</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="2" class="text-right"><strong>Total Cost:</strong></td>
+                                    <td><input type="text" class="form-control" id="total-cost" style="width:100px" name="total_cost" value="0" readonly></td>
+
+                                    {% comment %} <td id="total-cost">0.00</td> {% endcomment %}
+                                </tr>
+                            </tfoot> 
+                          </table>
+                          {% comment %} <div class="form-group col-md-6 mb-3">
+                            <label for="total-cost">Total Cost:</label>
+                            <span id="total-cost"></span>
+                        </div> {% endcomment %}
+                        <div class="form-group col-md-12">
+                            <h4>Payment</h4>										
+                        </div>
+                        {% comment %} <div class="form-group col-md-3">
+                            <label for="discount">Discount (%)</label>
+                            <input type="text" placeholder="Discount" class="form-control" id="discount">
+                        </div>	 {% endcomment %}
+                        {% comment %} <div class="form-group col-md-3">
+                            <label for="advance-paid">Advance Paid</label>
+                            <input type="text" placeholder="Advance Paid" class="form-control" id="advance-paid">
+                        </div> {% endcomment %}
+                        <div class="form-group col-md-3">
+                            <label for="payment-type">Payment Type</label>
+                            <select class="form-control" id="payment-type" name="payment_type" required>
+                                <option disabled="true" selected>Select the payment type</option>
+                                <option>Check</option>
+                                <option>Card</option>
+                                <option>Cash</option>
+                            </select>
+                        </div>	
+                        {% comment %} <div class="form-group col-md-3">
+                            <label for="card-check">Card/Check No</label>
+                            <input type="text" placeholder="Card/Check No" class="form-control" id="card-check">
+                        </div> {% endcomment %}
+                        <div class="form-check col-md-12 mb-2">
+                            <div class="text-left">
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="ex-check-2" required>
+                                    <label class="custom-control-label" for="ex-check-2">Please Confirm</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6 mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                        </div>
+                    </div>
+                </form>
+               
+            </div>
+        </div>
+        <!-- /Widget Item -->
+    </div>
+</div>
+<script type="text/javascript">
+    
+$(document).ready(function() {
+
+    $('#service-cost').val($('#service-cost').data('default'));
+
+    // Set default value and text for service dropdown
+    $('#service-name').val('').change();
+    $('#service-name option:selected').text($('#service-name').data('default-text'));
+
+    // Add event listener to service dropdown to update the service cost input
+
+    $('#service-name').on('change', function() {
+        var service_id = $(this).val();
+        $.ajax({
+            url: '/get-service-cost/',
+            type: 'GET',
+            data: {
+                'service_id': service_id
+            },
+            success: function(response) {
+                $('#service-cost').val(response.service_cost);
+            },
+            error: function() {
+                alert('An error occurred while retrieving the service cost.');
+            }
+        });
+    });
+
+
+    $("#services-table").on('input', '.txtCal', function () {
+        var calculated_total_sum = 0;
+        console.log("calculated_total_sum");
+      
+        $("#services-table .txtCal").each(function () {
+            var get_textbox_value = $(this).val();
+            if ($.isNumeric(get_textbox_value)) {
+               calculated_total_sum += get_textbox_value;
+               }                  
+             });
+             console.log(calculated_total_sum);
+               $("#total-cost").val(calculated_total_sum);
+        });
+
+});
+
+function addService() {
+    var serviceId = $('#service-name').val();
+    var serviceName = $('#service-name option:selected').text();
+    var serviceCost = $('#service-cost').val();
+    
+    if (serviceId == "") {
+        alert("Please select a service");
+        return;
+    }
+
+    var newRow = $('<tr>');
+        newRow.append($('<td>').text(serviceName));
+        newRow.append($('<td>').html('<input type="text" class="txtCal" value=' + serviceCost + ' readonly /> '));
+        newRow.append($('<td>').html('<button type="button" class="btn btn-outline-danger btn-sm" onclick="removeService(this)">Remove</button>'));
+        newRow.append($('<td>').html('<input type="hidden" name="service_id"  value=' + serviceId + ' hidden readonly /> '))
+  
+    $('#services-table tbody').append(newRow);
+   /* new */
+    $('#service-name option:selected').prop('disabled', true);
+        $('#service-name').val('');
+        $('#service-cost').val('');
+
+        recalculateTotalCost();
+
+    /* new */
+
+  }
+  
+  function removeService(button) {
+   
+    /* new */
+    /* disable becaume enable when remove*/
+   var serviceName = $(button).closest('tr').find('td:first-child').text();
+        $('#service-name option').each(function() {
+            if ($(this).text() === serviceName) {
+                $(this).prop('disabled', false);
+                return false; // Exit the loop
+            }
+        });
+
+        $(button).closest('tr').remove();
+
+        recalculateTotalCost();
+        /* new*/
+  }
+  
+  function recalculateTotalCost() {
+    var totalCost = 0;
+    $("#services-table .txtCal").each(function() {
+        var get_textbox_value = $(this).val();
+        console.log(get_textbox_value);
+
+        if ($.isNumeric(get_textbox_value)) {
+            totalCost += parseInt(get_textbox_value);
+        }
+    });
+    // console.log(totalCost);
+    // console.log("DONE");
+    $("#total-cost").val(totalCost);
+}
+
+</script>
+
+<!-- /Main Content -->
+
+{% endblock %}

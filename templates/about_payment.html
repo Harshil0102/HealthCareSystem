@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+{% block title %}About Payment{% endblock title %}
+{% block payment %} active {% endblock payment %}
+{% block payment1 %} {% endblock payment1 %}
+{% block body %}
+{% load static %}
+
+<!-- Main Content -->
+<div id="invoice">
+<div class="container py-5">
+    <div class="row">
+            <div class="col-md-12">
+                <div class="widget-area-2 proclinic-box-shadow pb-3">
+                    <!-- Invoice Head -->
+                    <div class="row ">
+                        <div class="col-sm-6 mb-5">
+                            <img src="{% static 'img/logo-dark.png' %}" alt="logo hospital" class="img-thumbnail">
+                            <br>    
+                            <br>                                     
+                            <span>Street Address</span>
+                            <br>
+                            <span>[City, ST ZIP Code]</span>
+                            <br>
+                            <span class="pr-2">Phone: +00 123456</span>
+                            <span>Fax: 432 1231 3456</span>
+                        </div>
+                        <div class="col-sm-6 text-md-right mb-5">
+                            <h3>INVOICE</h3>
+                            <br>
+                            <br>
+                            <span>Date: {{Payment.created_at}}</span>
+                        </div>
+                    </div>
+                    <!-- /Invoice Head -->
+                    <!-- Invoice Content -->
+                    <div class="row">
+                        <div class="col-sm-6 mb-5">
+                            <h6 class="proclinic-text-color">PATIENT DETAILS:</h6>
+                            <span><strong>Name:</strong>{{Payment.appointment.patient.first_name}} {{Payment.appointment.patient.last_name}}</span>
+                            <br>
+                            <span><strong>Age:</strong> {{user.profile.age}}</span>
+                            <br>
+                            <span><strong>Address: </strong>{{user.profile.address}}</span>
+                            <br>
+                            <span><strong>Phone:</strong> {{user.phone_number}}</span>
+                        </div>
+                        <div class="col-sm-6 mb-5">
+                            <h6 class="proclinic-text-color">DOCTOR DETAILS:</h6>
+                            <span><strong>Name:</strong> Dr. {{Payment.appointment.doctor.first_name}} {{Payment.appointment.doctor.last_name}} </span>
+                            <br>
+                            <span><strong>Specialization:</strong> {{user.profile.Specialization}}</span>
+                            <br>
+                            <span><strong>Payment Type:</strong> {{Payment.payment_type}}</span>
+                            
+                            
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <strong class="proclinic-text-color">Services:</strong>
+                        </div>
+                        <div class="col-sm-12">
+                            <table class="table table-bordered table-striped table-invioce">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Service</th>
+                                        <th scope="col">Unit Cost</th>
+                                        
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for i in Service %}
+                                    <tr>
+                                        <th scope="row">{{ forloop.counter }}</th>
+                                        <td>{{ i.service.service_name}}</td>
+                                        <td> {{ i.service.service_cost}}</td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>    
+                        </div>  
+                        <div class="col-sm-4 ml-auto">
+                            <table class="table table-bordered table-striped">
+                                <tbody>
+                                    
+                                    <tr>
+                                        <td>
+                                            <strong>GRAND TOTAL</strong>
+                                        </td>
+                                        <td>
+                                            {{Payment.total_cost}}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        
+                    </div>
+                    
+                    <!-- /Invoice Content -->
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<div class="col-sm-12">
+    <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center export-pagination mt-3 mb-0">
+               
+                <li class="page-item">
+                    <aside>
+                        <div class="align-items-center justify-content-center"><button class="button button3"  id="download"><span class="fa fa-file"></span>Generate PDF</button></div>
+                    </aside>
+                    
+                </li>
+            </ul>
+        </nav>
+    </div>
+<!-- /Main Content -->
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
+<script>
+         window.onload = function () {
+document.getElementById("download")
+.addEventListener("click", () => {
+    const invoice = this.document.getElementById("invoice");
+    console.log(invoice);
+    console.log(window);
+    var opt = {
+        margin: 1,
+        filename: 'HIS_bill.pdf',
+        image: { type: 'jpeg', quality: 1.00 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+    html2pdf().from(invoice).set(opt).save();
+})
+}
+</script>
+
+{% endblock %}

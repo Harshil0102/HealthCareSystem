@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}About Appointment{% endblock title %}
+{% block appointment %} active {% endblock appointment %}
+{% block appointment1 %} {% endblock appointment1 %}
+{% block body %}
+
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <!-- Widget Item -->
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">Appointment Details</h3>
+                <div class="table-responsive">
+                    {% if request.user.role == '1' %}
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            {% comment %} {% for appointment in appointments %} {% endcomment %}
+                            <tr>
+                                <td><strong>Patient ID</strong></td>
+                                <td>{{ appointment.patient.id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Doctor Name</strong></td>
+                                <td>Dr {{ appointment.doctor.first_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Department</strong></td>
+                                <td>{{ appointment.doctor.profile.Specialization }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Appointment Date</strong></td>
+                                <td>{{ appointment.date }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Appointemnt Time</strong></td>
+                                <td>{{ appointment.time }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Problem</strong></td>
+                                <td>{{ appointment.reason }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status</strong></td>
+                                <td>{{ appointment.status }}</td>
+                            </tr>
+                            {% comment %} {% endfor %} {% endcomment %}
+                        </tbody>
+                    </table>
+                    <a href="/edit_appointment/{{appointment.id}}" class="btn btn-primary mb-3">
+                        <i class="fas fa-pencil-alt"></i>
+                        Edit Appointment
+                      </a>
+                      <a href="/delete_appointment/{{appointment.id}}" class="btn btn-danger mb-3"><span class="fa fa-trash"></span> Delete
+                        Appointment</a>
+                
+                    {% elif request.user.role == '2' %}
+
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            {% comment %} {% for appointment in appointments %} {% endcomment %}
+                            <tr>
+                                <td><strong>Patient ID</strong></td>
+                                <td>{{ appointment.patient.id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Patient Name</strong></td>
+                                <td>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Appointment Date</strong></td>
+                                <td>{{ appointment.date }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Appointemnt Time</strong></td>
+                                <td>{{ appointment.time }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Problem</strong></td>
+                                <td>{{ appointment.reason }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status</strong></td>
+                                <td>{{ appointment.status }}</td>
+                            </tr>
+                            {% comment %} {% endfor %} {% endcomment %}
+                        </tbody>
+                    </table>
+
+                    {% else %}
+                    <p>You have no appointments.</p>
+                    {% endif %}
+
+                    
+                        
+                </div>
+            </div>
+        </div>
+        <!-- /Widget Item -->
+    </div>
+</div>
+<!-- /Main Content -->
+
+
+
+  
+
+{% endblock %}

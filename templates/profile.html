@@ -1,0 +1,233 @@
+{% extends 'base.html' %} 
+{% block title %}profile{% endblock title %} 
+{% block profile %} active {% endblock profile %}
+ {% load bootstrap4 %} 
+ {% block body %}
+
+<div class="container my-5">
+  <div class="main-body">
+    <div class="row gutters-sm">
+      <div class="col-md-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+              <img
+                src="{{user.profile.image.url}}" alt="Profile Image"
+                class="rounded-circle"
+                width="200"
+                height="200"
+              />
+              <div class="mt-3">
+                <h4>{{request.user}}</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-8">
+        <div class="card mb-3">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">First Name :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">{{user.first_name}}</div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Last Name :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">{{user.last_name}}</div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Email :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">{{user.email}}</div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Phone Number :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">{{user.phone_number}}</div>
+            </div>
+            <hr />
+
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Address :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{user.profile.address}}
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Age :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">{{user.profile.age}}</div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Gender</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">{{user.profile.gender}}</div>
+            </div>
+            <hr />
+
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">date_of_birth :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{user.profile.date_of_birth}}
+              </div>
+            </div>
+            <hr />
+            {% if request.user.role == '2' %}
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Specialization :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{user.profile.Specialization}}
+              </div>
+            </div>
+            <hr />
+            <div class="row">
+              <div class="col-sm-3">
+                <h6 class="mb-0">Year_of_experience :</h6>
+              </div>
+              <div class="col-sm-9 text-secondary">
+                {{user.profile.Year_of_experience}}
+              </div>
+            </div>
+            <hr />
+            {% endif %}
+            <a href="{% url 'password_change' %}">Change Password</a>
+            <hr />
+            <div class="row">
+              <div class="col-sm-12">
+                <button
+                  type="button"
+                  class="btn btn-info"
+                  data-bs-toggle="modal"
+                  data-bs-target="#exampleEdit"
+                >
+                  Edit
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+           
+  
+    
+  
+    {{ user_form.username.errors }}
+    <div class="form-group">
+      <label for="{{ user_form.username.id_for_label }}">Username</label>
+      {{ user_form.username }}
+    </div>
+  
+    {{ user_form.email.errors }}
+    <div class="form-group">
+      <label for="{{ user_form.email.id_for_label }}">Email</label>
+      {{ user_form.email }}
+    </div>
+  
+    {{ user_form.first_name.errors }}
+    <div class="form-group">
+      <label for="{{ user_form.first_name.id_for_label }}">First Name</label>
+      {{ user_form.first_name }}
+    </div>
+  
+    {{ user_form.last_name.errors }}
+    <div class="form-group">
+      <label for="{{ user_form.last_name.id_for_label }}">Last Name</label>
+      {{ user_form.last_name }}
+    </div>
+  
+    {{ user_form.phone_number.errors }}
+    <div class="form-group">
+      <label for="{{ user_form.phone_number.id_for_label }}">Phone Number</label>
+      {{ user_form.phone_number }}
+    </div>
+    
+      <!-- Profile form for role 1 -->
+      {{ profile_form.age.errors }}
+      <div class="form-group">
+        <label for="{{ profile_form.age.id_for_label }}">Age</label>
+        {{ profile_form.age }}
+      </div>
+  
+      {{ profile_form.gender.errors }}
+      <div class="form-group">
+        <label for="{{ profile_form.gender.id_for_label }}">Gender</label>
+        {{ profile_form.gender }}
+      </div>
+  
+      {{ profile_form.date_of_birth.errors }}
+      <div class="form-group">
+        <label for="{{ profile_form.date_of_birth.id_for_label }}">Date of Birth</label>
+        {{ profile_form.date_of_birth }}
+      </div>
+  
+      {{ profile_form.address.errors }}
+      <div class="form-group">
+        <label for="{{ profile_form.address.id_for_label }}">Address</label>
+        {{ profile_form.address }}
+      </div>
+      
+      {{ profile_form.image.errors }}
+      <div class="form-group">
+        <label for="{{ profile_form.image.id_for_label }}">Profile Image</label>
+        {{ profile_form.image }}
+      </div>
+      {% if request.user.role == '2' %} 
+      {{ profile_form.Year_of_experience.errors }}
+      <div class="form-group">
+        <label for="{{ profile_form.Year_of_experience.id_for_label }}">Year of experience</label>
+        {{ profile_form.Year_of_experience }}
+      </div>
+      {{ profile_form.Specialization.errors }}
+      <div class="form-group">
+        <label for="{{ profile_form.Specialization.id_for_label }}">Specialization</label>
+        {{ profile_form.Specialization }}
+      </div>
+    {% endif %}
+  
+  
+
+          <button type="submit" class="btn btn-primary mt-3">
+            Update Profile
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+  {% endblock body %}

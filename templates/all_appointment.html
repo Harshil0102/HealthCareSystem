@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %} ALL Appointment{% endblock title %}
+{% block appointment %} active {% endblock appointment %}
+{% block appointment1 %} {% endblock appointment1 %}
+{% block body %}
+
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Add the search form -->
+<div class="search_container_new">
+    <form action="" method="get">
+        <div class="search_box">
+            <input placeholder="Search Name..." type="search" name="search_prd" value="{{ request.GET.search_prd }}">
+            <button type="submit">Search</button>
+        </div>
+    </form>
+</div>
+        <!-- Widget Item -->
+        <div class="col-md-12">
+            <div class="widget-area-2 proclinic-box-shadow">
+                <h3 class="widget-title">All Appointment</h3>
+                <div class="table-responsive">
+
+                   {% if request.user.role == '1' %}
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr>
+                                {% comment %} <th><strong>Patient ID</strong></th> {% endcomment %}
+                                <th><strong>Doctor Name</strong></th>
+                                <th><strong>Department</strong></th>
+                                <th><strong>Appointment Date</strong></th>
+                                <th><strong>Appointment Time </strong></th>
+                                <th><strong>Problem</strong></th>
+                                <th><strong>Status</strong></th>
+                                <th><strong>Actions</strong></th>
+                            </tr>
+                            {% for appointment in appointments %}
+                            <tr>
+                                {% comment %} <td>{{ appointment.patient.id }}</td> {% endcomment %}
+                                <td>Dr {{ appointment.doctor.first_name }}</td>
+                                <td>{{ appointment.doctor.profile.Specialization }}</td>
+                                <td>{{ appointment.date }}</td>
+                                <td>{{ appointment.time }}</td>
+                                <td class="text-truncate" style="max-width: 150px;">{{ appointment.reason }}</td>
+                                <td >{{ appointment.status }}</td>
+                                <td>
+                                    <a href="/about_appointment/{{appointment.id}}" class="btn btn-warning btn-sm"><span class="fa fa-eye"></span></a>
+                                    <a href="/edit_appointment/{{appointment.id}}" class="btn btn-info btn-sm"><span class="fa fa-pencil-alt"></span></a>
+                                    <a href="/delete_appointment/{{appointment.id}}" class="btn btn-danger btn-sm"><span class="fa fa-trash"></span>
+                                    
+                                    </a>
+                                    <a href="/add_payment/{{appointment.id}}" class="btn btn-success btn-sm">payment</a>
+                                </td>
+                            </tr>
+                            
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    
+                    {% elif request.user.role == '2' %}
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            <tr>
+                                <th><strong>Patient Name</strong></th>
+                                <th><strong>Doctor Name</strong></th>
+                                <th><strong>Appointment Date</strong></th>
+                                <th><strong>Time Slot </strong></th>
+                                <th><strong>Problem</strong></th>
+                                <th><strong>Actions</strong></th>
+                            </tr>
+                            {% for appointment in appointments %}
+                            <tr>
+                                <td>{{ appointment.patient.first_name }} {{ appointment.patient.last_name }}</td>
+                                <td>Dr {{ appointment.doctor.first_name }} {{ appointment.doctor.last_name }}</td>
+                                <td>{{ appointment.date }}</td>
+                                <td>{{ appointment.time }}</td>
+                                <td class="text-truncate" style="max-width: 150px;">{{ appointment.reason }}</td>
+                                <td>
+                                    <a href="/about_appointment/{{appointment.id}}" class="btn btn-warning btn-sm"><span class="fa fa-eye"></span></a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <p>You have no appointments.</p>
+                    {% endif %}
+                    
+                   
+                    
+                </div>
+            </div>
+        </div>
+        <!-- /Widget Item -->
+    </div>
+</div>
+<!-- /Main Content -->
+
+
+
+{% endblock %}
